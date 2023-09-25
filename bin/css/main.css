@@ -1,0 +1,166 @@
+div#game {
+  aspect-ratio: 20 / 9;
+  margin: 0 auto;
+}
+div.full-target {
+  max-width: 1680px;
+}
+canvas#three {
+  position: absolute;
+  user-select: none;
+}
+canvas#pixi {
+  position: absolute;
+  user-select: none;
+}
+header img {
+	margin: 25px auto;
+	padding: 0;
+	display: block;
+	user-select: none;
+}
+html{
+	background-color: #FFFFFF;
+}
+body {
+	margin: 0 auto;
+	color: #222222;
+}
+div#control {
+	text-align: center;
+}
+div#header {
+	text-align: center;
+}
+div#footer {
+	margin: 0 auto;
+	margin-top: 10px;
+	margin-bottom: 30px;
+	text-align: center;
+	font-size: 13px;
+}
+a {
+	text-decoration:none;
+	color:#6677FD;
+}
+b {
+	font-weight:bold;
+}
+p {
+	line-height: 1.5em;
+}
+li {
+	line-height: 1.5em;
+}
+a:link {
+	text-decoration:none;
+}
+a:visited {
+	color:#7799FD;
+}
+a:hover {
+	text-decoration:underline;
+}
+
+body.full {
+	overflow: hidden;
+}
+.hide {
+	display: none;
+}
+.full {
+	position: absolute;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	width:100% !important; 
+	height:100% !important;
+	max-width: 100% !important; 
+	max-height: 100% !important; 
+	background: #222222;
+}
+h1 {
+	font-size: 48px;
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+h2 {
+	font-size: 32px;
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+h3 {
+	font-size: 20px;
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+dt {
+	margin-top: 5px;
+}
+pre {
+	margin-top: 10px;
+	margin-bottom: 5px;
+	padding: 20px;
+	background-color: #FCFCFC;
+	border: solid 1px #F0F0F0;
+	white-space: pre;           /* CSS 2.0 */
+	white-space: pre-wrap;      /* CSS 2.1 */
+	white-space: pre-line;      /* CSS 3.0 */
+	white-space: -pre-wrap;     /* Opera 4-6 */
+	white-space: -o-pre-wrap;   /* Opera 7 */
+	white-space: -moz-pre-wrap; /* Mozilla */
+	white-space: -hp-pre-wrap;  /* HP Printers */
+	word-wrap: break-word;      /* IE 5+ */
+}
+ul {
+	padding: 1em;
+	list-style: disc;
+}
+div#subtitle {
+	margin: 230px auto;
+	padding: 0; 
+	width: 576px; 
+	text-align: center;
+	font-size: 12px;
+}
+div#about {
+	max-width: 900px;
+    margin: 0 auto;
+	padding: 0 25px;
+}
+
+button {
+	text-align: center;
+	padding: 10px;
+	margin: 15px auto;
+	height: 58px;
+	width: 138px;
+    text-decoration: none;
+	background: none;
+    border: dashed 1px #AAAAAA;
+    border-radius: 3px;
+	align-items: center;
+	display:flex;
+	color: #222222;
+}
+button:hover {
+    border: solid 1px #AAAAAA;
+}
+button>img {
+	margin: 0;
+	padding: 0;
+}
+button>div {
+	margin: 0 auto;
+	padding: 0;
+}
+div#control>a:hover {
+	text-decoration: none !important;
+}
+canvas {
+  image-rendering : pixelated;           /* Crome */
+  image-rendering : -moz-crisp-edges;    /* Firefox */
+  image-rendering : crisp-edges;
+  -ms-interpolation-mode : nearest-neighbor;  /* IE */
+}

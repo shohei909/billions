@@ -1,0 +1,15 @@
+{
+	"files.exclude":{
+		"**/build.hxml": true,
+		"**/*.hxproj": true
+	},
+	"haxe.configurations": [
+		{"label": "HashLink/JIT", "args": ["build_hl.hxml", "-cmd", "hl bin/main.hl"]}
+	],
+	"[haxe]": {
+		"editor.formatOnSave": true
+	},
+	"haxe.displayServer": {
+		"arguments": ["-v"]
+	}
+}

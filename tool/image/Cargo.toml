@@ -1,0 +1,11 @@
+[package]
+name = "bomb_image_tool"
+version = "0.1.0"
+edition = "2018" 
+
+[dependencies]
+texture_packer = { version = "0.24.1", features = ["png"] }
+image = { version = "0.24.3", default-features = false }
+glob = { version = "0.3.0" }
+serde_json = { version = "1.0.85" }
+serde = { version = "1.0", features = ["derive"] }

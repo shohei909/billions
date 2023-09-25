@@ -1,0 +1,10 @@
+-lib heaps:1.10.0
+-lib tweenxcore:1.1.0
+-lib typepacker:1.3.1
+-cp src
+-cp gen
+-main Main
+-dce full
+-D release
+-D heaps_sprite
+-D fps

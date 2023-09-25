@@ -1,0 +1,3 @@
+build_common.hxml
+-js bin/main.js
+-D js-source-map

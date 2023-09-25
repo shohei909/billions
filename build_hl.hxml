@@ -1,0 +1,4 @@
+build_common.hxml
+-lib hlsdl:1.13.0
+#-lib hldx:1.13.0
+-hl bin/main.hl

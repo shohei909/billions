@@ -4,8 +4,9 @@ import game.asset.tile.Slice9;
 import game.constants.GameConstants;
 import game.page.game.GamePageView;
 import game.page.game.puzzle.PuzzleBlock;
-import game.page.game.puzzle.PuzzleCell;
+import game.page.game.puzzle.PuzzlePosition;
 import game.page.game.puzzle.PuzzleField;
+import game.root.InputKind;
 import h2d.SpriteBatch;
 import h2d.SpriteBatch.BatchElement;
 import h2d.Tile;
@@ -19,10 +20,10 @@ class PuzzleFieldView implements View
 	private var parent:GamePageView;
 	private var logic:PuzzleField;
 	
-	private var layer:SpriteBatch;
-	private var cells:Array<PuzzleBlockView>;
-	private var pools:Array<PuzzleBlockView>;
-	private var previews:Array<BatchElement>;
+	private var layer   :SpriteBatch;
+	private var cells   :Array<PuzzleBlockView>;
+	private var pools   :Array<PuzzleBlockView>;
+	private var previews:Array<PuzzlePreview>;
 	
 	public function new(
 		logic:PuzzleField, 
@@ -39,13 +40,13 @@ class PuzzleFieldView implements View
 	{
 		parent.fieldLayer.addChild(layer = new SpriteBatch(Main.assetsManager.rootTile));
 		
-		previews = [for (i in 0...2) layer.alloc(Main.assetsManager.getMainTile(MainTileId.Preview).tile)];
+		previews = [for (i in 0...2) new PuzzlePreview(layer)];
 		
 		var background = new Slice9(
 			Main.assetsManager.frame,
 			-1,
 			-1,
-			12 * GameConstants.WIDTH  + 2,
+			12 * (GameConstants.WIDTH + 1) + 2,
 			24 * GameConstants.HEIGHT + 2,
 			1,
 			1
@@ -86,16 +87,14 @@ class PuzzleFieldView implements View
 			for (i in 0...previews.length)
 			{
 				var preview = previews[i];
-				if (logic.state == PuzzleFieldState.Input && i< logic.inputState.next.length)
+				if (logic.state == PuzzleFieldState.Input && i< logic.inputState.nexts.length)
 				{
-					var next = logic.inputState.next[i];
-					preview.x = 12 * next.x;
-					preview.y = 24 * next.y;
-					preview.visible = true;
+					var next = logic.inputState.nexts[i];
+					preview.show(next.x, next.y, if (i == 0) InputKind.L else InputKind.R, next.color);
 				}
 				else
 				{
-					preview.visible = false;
+					preview.hide();
 				}
 			}
 			this.dirtyCells = false;
@@ -104,6 +103,10 @@ class PuzzleFieldView implements View
 		for (cell in cells)
 		{
 			cell.draw(logic.frame);
+		}
+		for (preview in previews)
+		{
+			preview.draw();
 		}
 	}
 	

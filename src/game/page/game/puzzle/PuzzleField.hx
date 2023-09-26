@@ -3,8 +3,9 @@ import game.asset.tile.MainTileId;
 import game.constants.GameConstants;
 import game.page.game.GamePage;
 import game.page.game.puzzle.BlockColor;
-import game.page.game.puzzle.PuzzleCell;
+import game.page.game.puzzle.PuzzlePosition;
 import game.page.game.puzzle.PuzzleFieldDeleteState;
+import game.page.game.puzzle.PuzzleSuggest;
 import game.root.InputKind;
 import h2d.Tile;
 import tool.XorShift;
@@ -27,7 +28,7 @@ class PuzzleField implements ViewableLogic
 	
 	public var inputState :PuzzleFieldInputState;
 	public var deleteState:PuzzleFieldDeleteState;
-	public var previews:Array<Array<Int>>;
+	public var previews:Array<Array<PuzzleSuggest>>;
 	public var currentChain:Int;
 	
 	public function new(parent:GamePage) 
@@ -44,7 +45,7 @@ class PuzzleField implements ViewableLogic
 		blocks    = [for (x in 0...GameConstants.WIDTH) [for (y in 0...GameConstants.HEIGHT) null]];
 		blockPool = [];
 		
-		previews = [for (_ in 0...2) []];
+		previews = [for (_ in 0...2) [new PuzzleSuggest(), new PuzzleSuggest()]];
 		
 		emitter = new XorShift(Math.floor(Math.random() * 0x7FFFFFFF));
 		inputState = new PuzzleFieldInputState(this);
@@ -75,20 +76,19 @@ class PuzzleField implements ViewableLogic
 	{
 		switch (kind)
 		{
-			case InputKind.Yellow: emit(BlockColor.Yellow);
-			case InputKind.Blue  : emit(BlockColor.Blue);
+			case InputKind.L | InputKind.Left : emit(0);
+			case InputKind.R | InputKind.Right: emit(1);
 			case _:
 		}
 	}
 	
-	public function emit(color:BlockColor):Void 
+	public function emit(index:Int):Void 
 	{
 		if (state != PuzzleFieldState.Input) { return; }
 		
-		for (state in inputState.next)
-		{
-			add(state.x, state.y, state.x, 0, color);
-		}
+		var state = inputState.nexts[index];
+		add(state.x, state.y, state.x, 0, state.color);
+		
 		drop();
 	}
 	

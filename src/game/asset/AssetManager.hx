@@ -1,6 +1,5 @@
 package game.asset;
 
-import game.animation.IAnimation;
 import game.asset.tile.MainTileId;
 import game.asset.tile.TileSheet;
 import game.asset.tile.TileSource;
@@ -17,6 +16,10 @@ class AssetManager {
 	public var tiles          :Array<TileSource>;
 	public var font           :Font;
 	public var mainTiles      :TileSheet;
+	public var frame          :Array<TileSource>;
+	public var keyTiles    :TileSheet;
+	public var padTiles    :TileSheet;
+	public var padWideTiles:TileSheet;
 	
 	public function new() {
 		
@@ -48,6 +51,10 @@ class AssetManager {
 		}
 
 		mainTiles = initTiles(CoreTileId.TILES, 24, 24);
+		keyTiles = initTiles(CoreTileId.KEY, 15, 16);
+		padTiles = initTiles(CoreTileId.PAD, 15, 16);
+		padWideTiles    = initTiles(CoreTileId.PAD_WIDE   , 17, 16);
+		frame = initSlice9(CoreTileId.FRAME, 2, 3, 2, 3);
 	}
 	public function initTiles(id:CoreTileId, tileWidth:Int, tileHeight:Int):TileSheet
 	{

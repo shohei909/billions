@@ -1,6 +1,6 @@
 package game.page.game.puzzle;
 
-abstract PuzzleCell(Int) 
+abstract PuzzlePosition(Int) 
 {
 	public function new(x:Int, y:Int)
 	{

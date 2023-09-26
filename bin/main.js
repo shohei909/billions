@@ -2618,7 +2618,11 @@ var game_asset_AssetManager = function() {
 		++_g;
 		this.tiles.push(new game_asset_tile_TileSource(data.sw,data.sh,this.rootTile.sub(data.x,data.y,data.w,data.h,data.sx,data.sy)));
 	}
-	this.mainTiles = this.initTiles(0,24,24);
+	this.mainTiles = this.initTiles(5,24,24);
+	this.keyTiles = this.initTiles(1,15,16);
+	this.padTiles = this.initTiles(3,15,16);
+	this.padWideTiles = this.initTiles(4,17,16);
+	this.frame = this.initSlice9(0,2,3,2,3);
 };
 $hxClasses["game.asset.AssetManager"] = game_asset_AssetManager;
 game_asset_AssetManager.__name__ = "game.asset.AssetManager";
@@ -2626,13 +2630,129 @@ game_asset_AssetManager.prototype = {
 	initTiles: function(id,tileWidth,tileHeight) {
 		return new game_asset_tile_TileSheet(this.getCoreTile(id),tileWidth,tileHeight);
 	}
+	,initSlice9: function(id,left,right,top,bottom) {
+		var baseTile = this.getCoreTile(id);
+		var x0 = 0;
+		var y0 = 0;
+		var x1 = left;
+		var y1 = top;
+		var x2 = baseTile.width - right;
+		var y2 = baseTile.height - bottom;
+		var w0 = x1;
+		var h0 = y1;
+		var w1 = x2 - x1;
+		var h1 = y2 - y1;
+		var w2 = right;
+		var h2 = bottom;
+		return [baseTile.sub(x0,y0,w0,h0),baseTile.sub(x1,y0,w1,h0),baseTile.sub(x2,y0,w2,h0),baseTile.sub(x0,y1,w0,h1),baseTile.sub(x1,y1,w1,h1),baseTile.sub(x2,y1,w2,h1),baseTile.sub(x0,y2,w0,h2),baseTile.sub(x1,y2,w1,h2),baseTile.sub(x2,y2,w2,h2)];
+	}
 	,getCoreTileId: function(id) {
 		return id;
 	}
 	,getCoreTile: function(id) {
 		return this.tiles[this.getCoreTileId(id)];
 	}
+	,getMainTileId: function(id) {
+		return id;
+	}
+	,getMainTile: function(id) {
+		return this.mainTiles.source[this.getMainTileId(id)];
+	}
 	,__class__: game_asset_AssetManager
+};
+var game_asset_tile_Slice9 = function(tiles,x,y,width,height,scaleX,scaleY) {
+	this.tiles = tiles;
+	this.element00 = new h2d_BatchElement(tiles[0].tile);
+	this.element01 = new h2d_BatchElement(tiles[1].tile);
+	this.element02 = new h2d_BatchElement(tiles[2].tile);
+	this.element10 = new h2d_BatchElement(tiles[3].tile);
+	this.element11 = new h2d_BatchElement(tiles[4].tile);
+	this.element12 = new h2d_BatchElement(tiles[5].tile);
+	this.element20 = new h2d_BatchElement(tiles[6].tile);
+	this.element21 = new h2d_BatchElement(tiles[7].tile);
+	this.element22 = new h2d_BatchElement(tiles[8].tile);
+	this.move(x,y,width,height,scaleX,scaleY);
+};
+$hxClasses["game.asset.tile.Slice9"] = game_asset_tile_Slice9;
+game_asset_tile_Slice9.__name__ = "game.asset.tile.Slice9";
+game_asset_tile_Slice9.prototype = {
+	move: function(x,y,width,height,scaleX,scaleY) {
+		var w0 = this.tiles[0].width;
+		var h0 = this.tiles[0].height;
+		var w2 = this.tiles[8].width;
+		var h2 = this.tiles[8].height;
+		var w1 = width - w0 - w2;
+		var h1 = height - h0 - h2;
+		w0 *= scaleX;
+		h0 *= scaleY;
+		w2 *= scaleX;
+		h2 *= scaleY;
+		w1 *= scaleX;
+		h1 *= scaleY;
+		var x0 = x;
+		var y0 = y;
+		var x1 = x0 + w0;
+		var y1 = y0 + h0;
+		var x2 = x1 + w1;
+		var y2 = y1 + h1;
+		var element = this.element00;
+		element.x = x0;
+		element.y = y0;
+		element.scaleX = w0 / element.t.width;
+		element.scaleY = h0 / element.t.height;
+		var element = this.element01;
+		element.x = x1;
+		element.y = y0;
+		element.scaleX = w1 / element.t.width;
+		element.scaleY = h0 / element.t.height;
+		var element = this.element02;
+		element.x = x2;
+		element.y = y0;
+		element.scaleX = w2 / element.t.width;
+		element.scaleY = h0 / element.t.height;
+		var element = this.element10;
+		element.x = x0;
+		element.y = y1;
+		element.scaleX = w0 / element.t.width;
+		element.scaleY = h1 / element.t.height;
+		var element = this.element11;
+		element.x = x1;
+		element.y = y1;
+		element.scaleX = w1 / element.t.width;
+		element.scaleY = h1 / element.t.height;
+		var element = this.element12;
+		element.x = x2;
+		element.y = y1;
+		element.scaleX = w2 / element.t.width;
+		element.scaleY = h1 / element.t.height;
+		var element = this.element20;
+		element.x = x0;
+		element.y = y2;
+		element.scaleX = w0 / element.t.width;
+		element.scaleY = h2 / element.t.height;
+		var element = this.element21;
+		element.x = x1;
+		element.y = y2;
+		element.scaleX = w1 / element.t.width;
+		element.scaleY = h2 / element.t.height;
+		var element = this.element22;
+		element.x = x2;
+		element.y = y2;
+		element.scaleX = w2 / element.t.width;
+		element.scaleY = h2 / element.t.height;
+	}
+	,addTo: function(layer) {
+		layer.add(this.element00);
+		layer.add(this.element01);
+		layer.add(this.element02);
+		layer.add(this.element10);
+		layer.add(this.element11);
+		layer.add(this.element12);
+		layer.add(this.element20);
+		layer.add(this.element21);
+		layer.add(this.element22);
+	}
+	,__class__: game_asset_tile_Slice9
 };
 var game_asset_tile_TileSheet = function(baseTile,tileWidth,tileHeight) {
 	this.width = tileWidth;
@@ -2722,6 +2842,7 @@ var game_page_game_GamePage = function(root,data) {
 	this.viewReference = new viewTree_core_ViewReference(root.viewReference,this.view = new game_page_game_GamePageView(this,root.view));
 	this.data = data;
 	this.root = root;
+	this.puzzleField = new game_page_game_puzzle_PuzzleField(this);
 };
 $hxClasses["game.page.game.GamePage"] = game_page_game_GamePage;
 game_page_game_GamePage.__name__ = "game.page.game.GamePage";
@@ -2729,14 +2850,17 @@ game_page_game_GamePage.__interfaces__ = [viewTree_core_Page];
 game_page_game_GamePage.prototype = {
 	update: function() {
 		this.frame += 1;
+		this.puzzleField.update();
 	}
 	,pauseUpdate: function() {
 	}
 	,keyDown: function(kind) {
+		this.puzzleField.keyDown(kind);
 	}
 	,keyUp: function(kind) {
 	}
 	,walkChildren: function(callback) {
+		callback(this.puzzleField);
 	}
 	,__class__: game_page_game_GamePage
 };
@@ -2756,12 +2880,1013 @@ game_page_game_GamePageView.__name__ = "game.page.game.GamePageView";
 game_page_game_GamePageView.__interfaces__ = [viewTree_core_View];
 game_page_game_GamePageView.prototype = {
 	initialize: function() {
+		this.parent.layer.addChild(this.fieldLayer = new h2d_Object());
+		this.parent.layer.addChild(this.uiLayer = new h2d_SpriteBatch(Main.assetsManager.rootTile));
+		var _this = this.fieldLayer;
+		_this.posChanged = true;
+		_this.x = (game_constants_ViewConstants.WIDTH - 180) / 2;
+		var _this = this.fieldLayer;
+		_this.posChanged = true;
+		_this.y = (game_constants_ViewConstants.HEIGHT - 312) / 2 + 20;
 	}
 	,dispose: function() {
+		this.parent.layer.removeChild(this.fieldLayer);
+		this.parent.layer.removeChild(this.uiLayer);
 	}
 	,draw: function(context) {
 	}
 	,__class__: game_page_game_GamePageView
+};
+var game_page_game_key_KeySuggestSprite = function(shouldCheck) {
+	this.shouldCheck = shouldCheck;
+	var sheet = Main.assetsManager.keyTiles;
+	this.bitmap = new h2d_BatchElement(sheet.tiles[0]);
+	var _this = Main.assetsManager.font;
+	var c = _this.glyphs.h[0];
+	if(c == null) {
+		c = _this.charset.resolveChar(0,_this.glyphs);
+		if(c == null) {
+			c = _this.defaultChar;
+		}
+	}
+	this.text = new h2d_BatchElement(c.t);
+	var _this = Main.assetsManager.font;
+	var c = _this.glyphs.h[0];
+	if(c == null) {
+		c = _this.charset.resolveChar(0,_this.glyphs);
+		if(c == null) {
+			c = _this.defaultChar;
+		}
+	}
+	this.plusText = new h2d_BatchElement(c.t);
+	this.secondBitmap = new h2d_BatchElement(sheet.tiles[0]);
+	var _this = Main.assetsManager.font;
+	var c = _this.glyphs.h[0];
+	if(c == null) {
+		c = _this.charset.resolveChar(0,_this.glyphs);
+		if(c == null) {
+			c = _this.defaultChar;
+		}
+	}
+	this.secondText = new h2d_BatchElement(c.t);
+	this.text.a = 0.6;
+	this.secondText.a = 0.6;
+};
+$hxClasses["game.page.game.key.KeySuggestSprite"] = game_page_game_key_KeySuggestSprite;
+game_page_game_key_KeySuggestSprite.__name__ = "game.page.game.key.KeySuggestSprite";
+game_page_game_key_KeySuggestSprite.getTiles = function(inputKind) {
+	if(Main.saveManager.inputSetting.isPad) {
+		var _g = Main.inputManager.getPadSetting(inputKind);
+		switch(_g) {
+		case "Back":case "LB":case "LT":case "LX":case "LY":case "RB":case "RT":case "RX":case "RY":case "Start":
+			return Main.assetsManager.padWideTiles;
+		default:
+			var value = _g;
+			return Main.assetsManager.padTiles;
+		}
+	} else {
+		return Main.assetsManager.keyTiles;
+	}
+};
+game_page_game_key_KeySuggestSprite.getCharCode = function(inputKind) {
+	return HxOverrides.cca(game_page_game_key_KeySuggestSprite.getText(inputKind),0);
+};
+game_page_game_key_KeySuggestSprite.getText = function(inputKind) {
+	if(Main.saveManager.inputSetting.isPad) {
+		var _g = Main.inputManager.getPadSetting(inputKind);
+		switch(_g) {
+		case "DDown":
+			return "▼";
+		case "DLeft":
+			return "◀";
+		case "DRight":
+			return "▶";
+		case "DUp":
+			return "▲";
+		case "Start":
+			return "⏵";
+		default:
+			var value = _g;
+			return HxOverrides.substr(value,0,1);
+		}
+	} else {
+		var _g = Main.inputManager.getKeySetting(inputKind);
+		switch(_g) {
+		case 8:
+			return "⌫";
+		case 9:
+			return "␉";
+		case 13:
+			return "⏎";
+		case 16:
+			return "⌂";
+		case 17:
+			return "⌃";
+		case 18:
+			return "⌥";
+		case 27:
+			return "␛";
+		case 32:
+			return "␣";
+		case 37:
+			return "←";
+		case 38:
+			return "↑";
+		case 39:
+			return "→";
+		case 40:
+			return "↓";
+		case 48:
+			return "0";
+		case 49:
+			return "1";
+		case 50:
+			return "2";
+		case 51:
+			return "3";
+		case 52:
+			return "4";
+		case 53:
+			return "5";
+		case 54:
+			return "6";
+		case 55:
+			return "7";
+		case 56:
+			return "8";
+		case 57:
+			return "9";
+		case 96:
+			return "0";
+		case 97:
+			return "1";
+		case 98:
+			return "2";
+		case 99:
+			return "3";
+		case 100:
+			return "4";
+		case 101:
+			return "5";
+		case 102:
+			return "6";
+		case 103:
+			return "7";
+		case 104:
+			return "8";
+		case 105:
+			return "9";
+		case 112:
+			return " ";
+		case 113:
+			return " ";
+		case 114:
+			return " ";
+		case 115:
+			return " ";
+		case 116:
+			return " ";
+		case 117:
+			return " ";
+		case 118:
+			return " ";
+		case 119:
+			return " ";
+		case 120:
+			return " ";
+		case 121:
+			return " ";
+		case 122:
+			return " ";
+		case 123:
+			return " ";
+		case 186:
+			return ";";
+		case 187:
+			return "=";
+		case 188:
+			return ",";
+		case 189:
+			return "-";
+		case 190:
+			return ".";
+		case 191:
+			return "/";
+		case 192:
+			return "~";
+		case 219:
+			return "(";
+		case 220:
+			return "\\";
+		case 221:
+			return ")";
+		case 222:
+			return "'";
+		default:
+			var id = _g;
+			return hxd_Key.getKeyName(id);
+		}
+	}
+};
+game_page_game_key_KeySuggestSprite.prototype = {
+	addTo: function(layer,textLayer) {
+		layer.add(this.bitmap);
+		layer.add(this.secondBitmap);
+		layer.add(this.text);
+		layer.add(this.plusText);
+		layer.add(this.secondText);
+	}
+	,draw: function(x,y,inputKind,secondInputKind) {
+		var sheet = game_page_game_key_KeySuggestSprite.getTiles(inputKind);
+		this.text.visible = this.bitmap.visible = true;
+		var sheet1 = sheet.tiles;
+		var tmp = this.shouldCheck && Main.inputManager.check(inputKind);
+		this.bitmap.t = sheet1[tmp ? 1 : 0];
+		var _this = Main.assetsManager.font;
+		var code = game_page_game_key_KeySuggestSprite.getCharCode(inputKind);
+		var c = _this.glyphs.h[code];
+		if(c == null) {
+			c = _this.charset.resolveChar(code,_this.glyphs);
+			if(c == null) {
+				c = code == 13 || code == 10 ? _this.nullChar : _this.defaultChar;
+			}
+		}
+		this.text.t = c.t;
+		if(secondInputKind == null) {
+			this.bitmap.x = Math.round(x - sheet.width / 2 - 0.5);
+			this.bitmap.y = Math.round(y - sheet.height);
+			this.text.x = this.bitmap.x + sheet.width / 2 - this.text.t.width / 2 + 1.0;
+			var tmp = this.bitmap.y;
+			var tmp1 = this.shouldCheck && Main.inputManager.check(inputKind);
+			this.text.y = tmp + (tmp1 ? 4 : 2);
+			this.plusText.visible = this.secondText.visible = this.secondBitmap.visible = false;
+		} else {
+			var sheet = game_page_game_key_KeySuggestSprite.getTiles(secondInputKind);
+			var sheet1 = sheet.tiles;
+			var tmp = this.shouldCheck && Main.inputManager.check(secondInputKind);
+			this.secondBitmap.t = sheet1[tmp ? 1 : 0];
+			var _this = Main.assetsManager.font;
+			var code = game_page_game_key_KeySuggestSprite.getCharCode(secondInputKind);
+			var c = _this.glyphs.h[code];
+			if(c == null) {
+				c = _this.charset.resolveChar(code,_this.glyphs);
+				if(c == null) {
+					c = code == 13 || code == 10 ? _this.nullChar : _this.defaultChar;
+				}
+			}
+			this.secondText.t = c.t;
+			this.bitmap.x = -14 + Math.round(x - sheet.width / 2 - 0.5);
+			this.bitmap.y = Math.round(y - sheet.height - 0.5);
+			this.text.x = this.bitmap.x + sheet.width / 2 - this.text.t.width / 2 + 1.0;
+			var tmp = this.bitmap.y;
+			var tmp1 = Main.inputManager.check(inputKind) ? 4 : 2;
+			this.text.y = tmp + tmp1;
+			this.secondBitmap.x = 14 + Math.round(x - sheet.width / 2 - 0.5);
+			this.secondBitmap.y = Math.round(y - sheet.height - 0.5);
+			this.secondText.x = this.secondBitmap.x + sheet.width / 2 - this.text.t.width / 2 + 1.0;
+			var tmp = this.secondBitmap.y;
+			var tmp1 = this.shouldCheck && Main.inputManager.check(secondInputKind);
+			this.secondText.y = tmp + (tmp1 ? 4 : 2);
+			var _this = Main.assetsManager.font;
+			var c = _this.glyphs.h[43];
+			if(c == null) {
+				c = _this.charset.resolveChar(43,_this.glyphs);
+				if(c == null) {
+					c = _this.defaultChar;
+				}
+			}
+			this.plusText.t = c.t;
+			this.plusText.x = Math.round(x - this.plusText.t.width / 2 + 0.5);
+			this.plusText.y = this.bitmap.y + 3;
+			this.plusText.visible = this.secondText.visible = this.secondBitmap.visible = true;
+		}
+	}
+	,hide: function() {
+		this.text.visible = this.bitmap.visible = false;
+		this.plusText.visible = this.secondText.visible = this.secondBitmap.visible = false;
+	}
+	,__class__: game_page_game_key_KeySuggestSprite
+};
+var game_page_game_puzzle_BlockColor = {};
+game_page_game_puzzle_BlockColor.getTile = function(this1) {
+	if(this1) {
+		return Main.assetsManager.getMainTile(1).tile;
+	} else {
+		return Main.assetsManager.getMainTile(0).tile;
+	}
+};
+var game_page_game_puzzle_DeleteLine = function() {
+	this.blocks = [];
+};
+$hxClasses["game.page.game.puzzle.DeleteLine"] = game_page_game_puzzle_DeleteLine;
+game_page_game_puzzle_DeleteLine.__name__ = "game.page.game.puzzle.DeleteLine";
+game_page_game_puzzle_DeleteLine.prototype = {
+	__class__: game_page_game_puzzle_DeleteLine
+};
+var game_page_game_puzzle_PuzzleBlock = function(x,y,prevX,prevY,movedFrame,color) {
+	this.refresh(x,y,prevX,prevY,movedFrame,color);
+};
+$hxClasses["game.page.game.puzzle.PuzzleBlock"] = game_page_game_puzzle_PuzzleBlock;
+game_page_game_puzzle_PuzzleBlock.__name__ = "game.page.game.puzzle.PuzzleBlock";
+game_page_game_puzzle_PuzzleBlock.prototype = {
+	refresh: function(x,y,prevX,prevY,movedFrame,color) {
+		this.x = x;
+		this.y = y;
+		this.color = color;
+		this.movedFrame = movedFrame;
+		this.prevY = prevY;
+		this.prevX = prevX;
+	}
+	,getTile: function() {
+		if(this.color) {
+			return Main.assetsManager.getMainTile(1).tile;
+		} else {
+			return Main.assetsManager.getMainTile(0).tile;
+		}
+	}
+	,__class__: game_page_game_puzzle_PuzzleBlock
+};
+var game_page_game_puzzle_PuzzleField = function(parent) {
+	this.stateFrame = 0;
+	this.frame = 0;
+	this.parent = parent;
+	this.viewReference = new viewTree_core_ViewReference(parent.viewReference,this.view = new game_page_game_puzzle_PuzzleFieldView(this,parent.view));
+	var _g = [];
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	var _g1 = [];
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g1.push(null);
+	_g.push(_g1);
+	this.blocks = _g;
+	this.blockPool = [];
+	var _g = [];
+	_g.push([new game_page_game_puzzle_PuzzleSuggest(),new game_page_game_puzzle_PuzzleSuggest()]);
+	_g.push([new game_page_game_puzzle_PuzzleSuggest(),new game_page_game_puzzle_PuzzleSuggest()]);
+	this.previews = _g;
+	this.emitter = new tool_XorShift(Math.floor(Math.random() * 2147483647));
+	this.inputState = new game_page_game_puzzle_PuzzleFieldInputState(this);
+	this.deleteState = new game_page_game_puzzle_PuzzleFieldDeleteState(this);
+	this.inputState.start();
+};
+$hxClasses["game.page.game.puzzle.PuzzleField"] = game_page_game_puzzle_PuzzleField;
+game_page_game_puzzle_PuzzleField.__name__ = "game.page.game.puzzle.PuzzleField";
+game_page_game_puzzle_PuzzleField.__interfaces__ = [viewTree_core_ViewableLogic];
+game_page_game_puzzle_PuzzleField.prototype = {
+	walkChildren: function(callback) {
+	}
+	,update: function() {
+		this.frame += 1;
+		this.stateFrame += 1;
+		switch(this.state) {
+		case 0:
+			break;
+		case 1:
+			if(this.stateFrame > 15) {
+				this.deleteState.tryStart();
+			}
+			break;
+		case 2:
+			if(this.stateFrame > 5) {
+				this.deleteState.finish();
+			}
+			break;
+		}
+	}
+	,keyDown: function(kind) {
+		switch(kind._hx_index) {
+		case 2:case 6:
+			this.emit(0);
+			break;
+		case 3:case 7:
+			this.emit(1);
+			break;
+		default:
+		}
+	}
+	,emit: function(index) {
+		if(this.state != 0) {
+			return;
+		}
+		var state = this.inputState.nexts[index];
+		this.add(state.x,state.y,state.x,0,state.color);
+		this.drop();
+	}
+	,drop: function() {
+		var _g = 0;
+		var _g1 = 12;
+		while(_g < _g1) {
+			var ry = _g++;
+			var _g2 = 0;
+			while(_g2 < 15) {
+				var x = _g2++;
+				var y = 11 - ry;
+				var block = this.blocks[x][y];
+				if(block != null) {
+					++y;
+					while(y < 13) if((x <= 0 || this.blocks[x - 1][y] == null) && this.blocks[x][y] == null && (x >= 14 || this.blocks[x + 1][y] == null)) {
+						++y;
+					} else {
+						break;
+					}
+					if(block.y != y - 1) {
+						this.blocks[block.x][block.y] = null;
+						block.y = y - 1;
+						block.movedFrame = this.frame;
+						this.blocks[block.x][block.y] = block;
+					}
+				}
+			}
+		}
+		this.state = 1;
+		this.stateFrame = 0;
+		this.view.dirtyCells = true;
+	}
+	,add: function(x,y,prevX,prevY,color) {
+		var block = this.blockPool.pop();
+		if(block == null) {
+			block = new game_page_game_puzzle_PuzzleBlock(x,y,prevX,prevY,this.frame,color);
+		} else {
+			block.refresh(x,y,prevX,prevY,this.frame,color);
+		}
+		this.blocks[block.x][block.y] = block;
+	}
+	,__class__: game_page_game_puzzle_PuzzleField
+};
+var game_page_game_puzzle_PuzzleFieldDeleteState = function(parent) {
+	this.parent = parent;
+	this.lines = [];
+	this.linePool = [];
+};
+$hxClasses["game.page.game.puzzle.PuzzleFieldDeleteState"] = game_page_game_puzzle_PuzzleFieldDeleteState;
+game_page_game_puzzle_PuzzleFieldDeleteState.__name__ = "game.page.game.puzzle.PuzzleFieldDeleteState";
+game_page_game_puzzle_PuzzleFieldDeleteState.prototype = {
+	tryStart: function() {
+		var _g = 0;
+		while(_g < 13) {
+			var y = _g++;
+			var _g1 = 0;
+			while(_g1 < 15) {
+				var x = _g1++;
+				var block = this.parent.blocks[x][y];
+				if(block != null) {
+					block.prevX = x;
+					block.prevY = y;
+				}
+			}
+		}
+		var line;
+		while(true) {
+			line = this.lines.pop();
+			if(!(line != null)) {
+				break;
+			}
+			var block;
+			while(true) {
+				block = line.blocks.pop();
+				if(!(block != null)) {
+					break;
+				}
+				this.parent.blockPool.push(block);
+			}
+			this.linePool.push(line);
+		}
+		var chainCount = -1;
+		var _g = 0;
+		while(_g < 15) {
+			var x = _g++;
+			var _g1 = 0;
+			var _g2 = 12;
+			while(_g1 < _g2) {
+				var y = _g1++;
+				var block = this.parent.blocks[x][y];
+				if(block != null) {
+					var block2 = this.parent.blocks[x][y + 1];
+					if(block2 != null && block.color == block2.color) {
+						var line = this.createLine();
+						this.lines.push(line);
+						line.blocks.push(block);
+						line.blocks.push(block2);
+						this.parent.blocks[x][y] = null;
+						this.parent.blocks[x][y + 1] = null;
+						chainCount += 2;
+						var y2 = y + 2;
+						while(y2 < 13) {
+							var block3 = this.parent.blocks[x][y2];
+							if(block3 != null && block.color == block3.color) {
+								line.blocks.push(block3);
+								this.parent.blocks[x][y2] = null;
+								++chainCount;
+							} else {
+								break;
+							}
+							++y2;
+						}
+						line.centerX = x;
+						line.centerY = (y + y2 - 1) / 2;
+						line.x = x;
+						line.y = y2 - 1;
+						line.color = block.color;
+					}
+				}
+			}
+		}
+		var _g = 0;
+		var _g1 = 13;
+		while(_g < _g1) {
+			var x = _g++;
+			var _g2 = 0;
+			while(_g2 < 13) {
+				var y = _g2++;
+				var block = this.parent.blocks[x][y];
+				if(block != null) {
+					var block2 = this.parent.blocks[x + 2][y];
+					if(block2 != null && block.color == block2.color) {
+						var line = this.createLine();
+						this.lines.push(line);
+						line.blocks.push(block);
+						line.blocks.push(block2);
+						this.parent.blocks[x][y] = null;
+						this.parent.blocks[x + 2][y] = null;
+						chainCount += 2;
+						var x2 = x + 4;
+						while(x2 < 15) {
+							var block3 = this.parent.blocks[x2][y];
+							if(block3 != null && block.color == block3.color) {
+								line.blocks.push(block3);
+								this.parent.blocks[x2][y] = null;
+								++chainCount;
+							} else {
+								break;
+							}
+							x2 += 2;
+						}
+						line.centerX = (x + x2 - 2) / 2;
+						line.centerY = y;
+						line.x = Math.round((x + x2 - 2) / 2);
+						line.y = y;
+						line.color = block.color;
+					}
+				}
+			}
+		}
+		if(chainCount < 0) {
+			this.parent.inputState.start();
+		} else {
+			this.parent.view.dirtyCells = true;
+			this.parent.currentChain += chainCount;
+			this.parent.state = 2;
+			this.parent.stateFrame = 0;
+		}
+	}
+	,finish: function() {
+		var _g = 0;
+		var _g1 = this.lines;
+		while(_g < _g1.length) {
+			var line = _g1[_g];
+			++_g;
+			this.parent.add(line.x,line.y,line.centerX,line.centerY,!line.color);
+			this.parent.view.dirtyCells = true;
+		}
+		this.parent.drop();
+	}
+	,createLine: function() {
+		var line = this.linePool.pop();
+		if(line == null) {
+			line = new game_page_game_puzzle_DeleteLine();
+		}
+		return line;
+	}
+	,__class__: game_page_game_puzzle_PuzzleFieldDeleteState
+};
+var game_page_game_puzzle_PuzzleFieldInputState = function(parent) {
+	this.parent = parent;
+	this.previewEmitter = new tool_XorShift();
+	this.nexts = [new game_page_game_puzzle_PuzzleSuggest(),new game_page_game_puzzle_PuzzleSuggest()];
+};
+$hxClasses["game.page.game.puzzle.PuzzleFieldInputState"] = game_page_game_puzzle_PuzzleFieldInputState;
+game_page_game_puzzle_PuzzleFieldInputState.__name__ = "game.page.game.puzzle.PuzzleFieldInputState";
+game_page_game_puzzle_PuzzleFieldInputState.prototype = {
+	start: function() {
+		this.applyPreview(this.nexts,this.parent.emitter.gen());
+		this.parent.emitter.copyTo(this.previewEmitter);
+		var _g = 0;
+		var _g1 = this.parent.previews;
+		while(_g < _g1.length) {
+			var preview = _g1[_g];
+			++_g;
+			this.applyPreview(preview,this.previewEmitter.gen());
+		}
+		var _g = 0;
+		var _g1 = this.nexts;
+		while(_g < _g1.length) {
+			var next = _g1[_g];
+			++_g;
+			var y = 0;
+			while(y < 12) if((next.x <= 0 || this.parent.blocks[next.x - 1][y + 1] == null) && this.parent.blocks[next.x][y + 1] == null && (next.x >= 14 || this.parent.blocks[next.x + 1][y + 1] == null)) {
+				++y;
+			} else {
+				break;
+			}
+			next.y = y;
+		}
+		this.parent.currentChain = 0;
+		this.parent.stateFrame = 0;
+		this.parent.state = 0;
+		this.parent.view.dirtyCells = true;
+	}
+	,applyPreview: function(preview,gen) {
+		var pos = 0;
+		var len = 4;
+		pos = gen % len;
+		preview[0].x = pos * 2;
+		var tmp = Math.random();
+		preview[0].color = tmp > 0.5;
+		gen = Math.floor(gen / len);
+		pos = len + gen % len;
+		preview[1].x = pos * 2;
+		var tmp = Math.random();
+		preview[1].color = tmp > 0.5;
+		if(preview[0].x > preview[1].x) {
+			preview.reverse();
+		}
+	}
+	,__class__: game_page_game_puzzle_PuzzleFieldInputState
+};
+var game_page_game_puzzle_PuzzleFieldView = function(logic,parent) {
+	this.logic = logic;
+	this.parent = parent;
+	this.cells = [];
+	this.pools = [];
+	this.dirtyCells = false;
+};
+$hxClasses["game.page.game.puzzle.PuzzleFieldView"] = game_page_game_puzzle_PuzzleFieldView;
+game_page_game_puzzle_PuzzleFieldView.__name__ = "game.page.game.puzzle.PuzzleFieldView";
+game_page_game_puzzle_PuzzleFieldView.__interfaces__ = [viewTree_core_View];
+game_page_game_puzzle_PuzzleFieldView.prototype = {
+	initialize: function() {
+		this.parent.fieldLayer.addChild(this.layer = new h2d_SpriteBatch(Main.assetsManager.rootTile));
+		var _g = [];
+		_g.push(new game_page_game_puzzle_PuzzlePreview(this.layer));
+		_g.push(new game_page_game_puzzle_PuzzlePreview(this.layer));
+		this.previews = _g;
+		var background = new game_asset_tile_Slice9(Main.assetsManager.frame,-1,-1,194,314,1,1);
+		background.addTo(this.layer);
+		this.layer.hasRotationScale = true;
+	}
+	,dispose: function() {
+		var _this = this.layer;
+		if(_this != null && _this.parent != null) {
+			_this.parent.removeChild(_this);
+		}
+	}
+	,draw: function(context) {
+		if(this.dirtyCells) {
+			var cell;
+			while(true) {
+				cell = this.cells.pop();
+				if(!(cell != null)) {
+					break;
+				}
+				this.pools.push(cell);
+				cell.element.remove();
+			}
+			var _g = 0;
+			while(_g < 15) {
+				var x = _g++;
+				var _g1 = 0;
+				while(_g1 < 13) {
+					var y = _g1++;
+					var cell = this.logic.blocks[x][y];
+					if(cell == null) {
+						continue;
+					}
+					this.add(cell);
+				}
+			}
+			var _g = 0;
+			var _g1 = this.previews.length;
+			while(_g < _g1) {
+				var i = _g++;
+				var preview = this.previews[i];
+				if(this.logic.state == 0 && i < this.logic.inputState.nexts.length) {
+					var next = this.logic.inputState.nexts[i];
+					preview.show(next.x,next.y,i == 0 ? game_root_InputKind.L : game_root_InputKind.R,next.color);
+				} else {
+					preview.hide();
+				}
+			}
+			this.dirtyCells = false;
+		}
+		var _g = 0;
+		var _g1 = this.cells;
+		while(_g < _g1.length) {
+			var cell = _g1[_g];
+			++_g;
+			cell.draw(this.logic.frame);
+		}
+		var _g = 0;
+		var _g1 = this.previews;
+		while(_g < _g1.length) {
+			var preview = _g1[_g];
+			++_g;
+			preview.draw();
+		}
+	}
+	,add: function(logic) {
+		var cell = this.pools.pop();
+		if(cell == null) {
+			cell = new game_page_game_puzzle__$PuzzleFieldView_PuzzleBlockView();
+		}
+		cell.refresh(logic);
+		this.layer.add(cell.element);
+		this.cells.push(cell);
+	}
+	,__class__: game_page_game_puzzle_PuzzleFieldView
+};
+var game_page_game_puzzle__$PuzzleFieldView_PuzzleBlockView = function() {
+	this.element = new h2d_BatchElement(Main.assetsManager.getMainTile(2).tile);
+};
+$hxClasses["game.page.game.puzzle._PuzzleFieldView.PuzzleBlockView"] = game_page_game_puzzle__$PuzzleFieldView_PuzzleBlockView;
+game_page_game_puzzle__$PuzzleFieldView_PuzzleBlockView.__name__ = "game.page.game.puzzle._PuzzleFieldView.PuzzleBlockView";
+game_page_game_puzzle__$PuzzleFieldView_PuzzleBlockView.prototype = {
+	refresh: function(logic) {
+		this.logic = logic;
+		this.element.t = logic.getTile();
+		this.element.x = 12 * logic.prevX;
+		this.element.y = 24 * logic.prevY;
+	}
+	,draw: function(frame) {
+		var value = (frame - this.logic.movedFrame) / 15;
+		var rate = value <= 0.0 ? 0.0 : 1.0 <= value ? 1.0 : value;
+		var easing2Strength = 0.8;
+		if(easing2Strength == null) {
+			easing2Strength = 0.5;
+		}
+		var t = rate;
+		var rate1 = t * (t *= t) * t * (1 - easing2Strength) + rate * easing2Strength;
+		this.element.x = 12 * (this.logic.prevX * (1 - rate1) + this.logic.x * rate1);
+		this.element.y = 24 * (this.logic.prevY * (1 - rate1) + this.logic.y * rate1);
+	}
+	,__class__: game_page_game_puzzle__$PuzzleFieldView_PuzzleBlockView
+};
+var game_page_game_puzzle_PuzzlePreview = function(layer) {
+	this.layer = layer;
+	this.color = layer.alloc(Main.assetsManager.getMainTile(1).tile);
+	this.frame = layer.alloc(Main.assetsManager.getMainTile(2).tile);
+	this.color.a = 0.7;
+	this.suggest = new game_page_game_key_KeySuggestSprite(true);
+	this.suggest.addTo(layer,layer);
+	this.hide();
+};
+$hxClasses["game.page.game.puzzle.PuzzlePreview"] = game_page_game_puzzle_PuzzlePreview;
+game_page_game_puzzle_PuzzlePreview.__name__ = "game.page.game.puzzle.PuzzlePreview";
+game_page_game_puzzle_PuzzlePreview.prototype = {
+	draw: function() {
+		if(this.color.visible) {
+			this.suggest.draw(this.color.x + 12,this.color.y - 2,this.inputKind);
+		}
+	}
+	,show: function(x,y,inputKind,c) {
+		this.inputKind = inputKind;
+		this.color.x = this.frame.x = 12 * x;
+		this.color.y = this.frame.y = 24 * y;
+		this.color.t = game_page_game_puzzle_BlockColor.getTile(c);
+		this.color.visible = true;
+		this.frame.visible = true;
+	}
+	,hide: function() {
+		this.suggest.hide();
+		this.color.visible = false;
+		this.frame.visible = false;
+	}
+	,__class__: game_page_game_puzzle_PuzzlePreview
+};
+var game_page_game_puzzle_PuzzleSuggest = function() {
+};
+$hxClasses["game.page.game.puzzle.PuzzleSuggest"] = game_page_game_puzzle_PuzzleSuggest;
+game_page_game_puzzle_PuzzleSuggest.__name__ = "game.page.game.puzzle.PuzzleSuggest";
+game_page_game_puzzle_PuzzleSuggest.prototype = {
+	__class__: game_page_game_puzzle_PuzzleSuggest
 };
 var game_root_EmptyPage = function(parent) {
 	this.frame = 0;
@@ -6711,6 +7836,306 @@ h2d_Scene.prototype = $extend(h2d_Layers.prototype,{
 	}
 	,__class__: h2d_Scene
 });
+var h2d_BatchElement = function(t) {
+	this.visible = true;
+	this.a = 1;
+	this.b = 1;
+	this.g = 1;
+	this.r = 1;
+	this.rotation = 0;
+	this.scaleY = 1;
+	this.scaleX = 1;
+	this.y = 0;
+	this.x = 0;
+	this.t = t;
+};
+$hxClasses["h2d.BatchElement"] = h2d_BatchElement;
+h2d_BatchElement.__name__ = "h2d.BatchElement";
+h2d_BatchElement.prototype = {
+	update: function(et) {
+		return true;
+	}
+	,remove: function() {
+		if(this.batch != null) {
+			this.batch.delete(this);
+		}
+	}
+	,__class__: h2d_BatchElement
+};
+var h2d_SpriteBatch = function(t,parent) {
+	this.hasUpdate = false;
+	this.hasRotationScale = false;
+	h2d_Drawable.call(this,parent);
+	this.tile = t;
+	this.state = new h2d_impl_BatchDrawState();
+};
+$hxClasses["h2d.SpriteBatch"] = h2d_SpriteBatch;
+h2d_SpriteBatch.__name__ = "h2d.SpriteBatch";
+h2d_SpriteBatch.__super__ = h2d_Drawable;
+h2d_SpriteBatch.prototype = $extend(h2d_Drawable.prototype,{
+	add: function(e,before) {
+		if(before == null) {
+			before = false;
+		}
+		e.batch = this;
+		if(this.first == null) {
+			this.first = this.last = e;
+			e.prev = e.next = null;
+		} else if(before) {
+			e.prev = null;
+			e.next = this.first;
+			this.first.prev = e;
+			this.first = e;
+		} else {
+			this.last.next = e;
+			e.prev = this.last;
+			e.next = null;
+			this.last = e;
+		}
+		return e;
+	}
+	,alloc: function(t) {
+		return this.add(new h2d_BatchElement(t));
+	}
+	,'delete': function(e) {
+		if(e.prev == null) {
+			if(this.first == e) {
+				this.first = e.next;
+			}
+		} else {
+			e.prev.next = e.next;
+		}
+		if(e.next == null) {
+			if(this.last == e) {
+				this.last = e.prev;
+			}
+		} else {
+			e.next.prev = e.prev;
+		}
+		e.batch = null;
+	}
+	,sync: function(ctx) {
+		h2d_Drawable.prototype.sync.call(this,ctx);
+		if(this.hasUpdate) {
+			var e = this.first;
+			while(e != null) {
+				if(!e.update(ctx.elapsedTime)) {
+					e.remove();
+				}
+				e = e.next;
+			}
+		}
+		this.flush();
+	}
+	,getBoundsRec: function(relativeTo,out,forSize) {
+		h2d_Drawable.prototype.getBoundsRec.call(this,relativeTo,out,forSize);
+		var e = this.first;
+		while(e != null) {
+			var t = e.t;
+			if(this.hasRotationScale) {
+				var ca = Math.cos(e.rotation);
+				var sa = Math.sin(e.rotation);
+				var hx = t.width;
+				var hy = t.height;
+				var px = t.dx * e.scaleX;
+				var py = t.dy * e.scaleY;
+				var x = px * ca - py * sa + e.x;
+				var y = py * ca + px * sa + e.y;
+				this.addBounds(relativeTo,out,x,y,1e-10,1e-10);
+				var px1 = (t.dx + hx) * e.scaleX;
+				var py1 = t.dy * e.scaleY;
+				x = px1 * ca - py1 * sa + e.x;
+				y = py1 * ca + px1 * sa + e.y;
+				this.addBounds(relativeTo,out,x,y,1e-10,1e-10);
+				var px2 = t.dx * e.scaleX;
+				var py2 = (t.dy + hy) * e.scaleY;
+				x = px2 * ca - py2 * sa + e.x;
+				y = py2 * ca + px2 * sa + e.y;
+				this.addBounds(relativeTo,out,x,y,1e-10,1e-10);
+				var px3 = (t.dx + hx) * e.scaleX;
+				var py3 = (t.dy + hy) * e.scaleY;
+				x = px3 * ca - py3 * sa + e.x;
+				y = py3 * ca + px3 * sa + e.y;
+				this.addBounds(relativeTo,out,x,y,1e-10,1e-10);
+			} else {
+				this.addBounds(relativeTo,out,e.x + t.dx,e.y + t.dy,t.width,t.height);
+			}
+			e = e.next;
+		}
+	}
+	,flush: function() {
+		if(this.first == null) {
+			return;
+		}
+		if(this.tmpBuf == null) {
+			this.tmpBuf = hxd__$FloatBuffer_Float32Expand._new(0);
+		}
+		var pos = 0;
+		var e = this.first;
+		var tmp = this.tmpBuf;
+		var bufferVertices = 0;
+		this.state.clear();
+		while(e != null) {
+			if(!e.visible) {
+				e = e.next;
+				continue;
+			}
+			var t = e.t;
+			if(t != null) {
+				this.state.setTexture(t.innerTex);
+			}
+			var _this = this.state;
+			_this.tail.count += 4;
+			_this.totalCount += 4;
+			var _g = tmp.pos;
+			var _g1 = pos + 32;
+			while(_g < _g1) {
+				var i = _g++;
+				if(tmp.pos == tmp.array.length) {
+					var newSize = tmp.array.length << 1;
+					if(newSize < 128) {
+						newSize = 128;
+					}
+					var newArray = new Float32Array(newSize);
+					newArray.set(tmp.array);
+					tmp.array = newArray;
+				}
+				tmp.array[tmp.pos++] = 0.;
+			}
+			if(this.hasRotationScale) {
+				var ca = Math.cos(e.rotation);
+				var sa = Math.sin(e.rotation);
+				var hx = t.width;
+				var hy = t.height;
+				var px = t.dx * e.scaleX;
+				var py = t.dy * e.scaleY;
+				tmp.array[pos++] = px * ca - py * sa + e.x;
+				tmp.array[pos++] = py * ca + px * sa + e.y;
+				tmp.array[pos++] = t.u;
+				tmp.array[pos++] = t.v;
+				tmp.array[pos++] = e.r;
+				tmp.array[pos++] = e.g;
+				tmp.array[pos++] = e.b;
+				tmp.array[pos++] = e.a;
+				var px1 = (t.dx + hx) * e.scaleX;
+				var py1 = t.dy * e.scaleY;
+				tmp.array[pos++] = px1 * ca - py1 * sa + e.x;
+				tmp.array[pos++] = py1 * ca + px1 * sa + e.y;
+				tmp.array[pos++] = t.u2;
+				tmp.array[pos++] = t.v;
+				tmp.array[pos++] = e.r;
+				tmp.array[pos++] = e.g;
+				tmp.array[pos++] = e.b;
+				tmp.array[pos++] = e.a;
+				var px2 = t.dx * e.scaleX;
+				var py2 = (t.dy + hy) * e.scaleY;
+				tmp.array[pos++] = px2 * ca - py2 * sa + e.x;
+				tmp.array[pos++] = py2 * ca + px2 * sa + e.y;
+				tmp.array[pos++] = t.u;
+				tmp.array[pos++] = t.v2;
+				tmp.array[pos++] = e.r;
+				tmp.array[pos++] = e.g;
+				tmp.array[pos++] = e.b;
+				tmp.array[pos++] = e.a;
+				var px3 = (t.dx + hx) * e.scaleX;
+				var py3 = (t.dy + hy) * e.scaleY;
+				tmp.array[pos++] = px3 * ca - py3 * sa + e.x;
+				tmp.array[pos++] = py3 * ca + px3 * sa + e.y;
+				tmp.array[pos++] = t.u2;
+				tmp.array[pos++] = t.v2;
+				tmp.array[pos++] = e.r;
+				tmp.array[pos++] = e.g;
+				tmp.array[pos++] = e.b;
+				tmp.array[pos++] = e.a;
+			} else {
+				var sx = e.x + t.dx;
+				var sy = e.y + t.dy;
+				tmp.array[pos++] = sx;
+				tmp.array[pos++] = sy;
+				tmp.array[pos++] = t.u;
+				tmp.array[pos++] = t.v;
+				tmp.array[pos++] = e.r;
+				tmp.array[pos++] = e.g;
+				tmp.array[pos++] = e.b;
+				tmp.array[pos++] = e.a;
+				tmp.array[pos++] = sx + t.width + 0.1;
+				tmp.array[pos++] = sy;
+				tmp.array[pos++] = t.u2;
+				tmp.array[pos++] = t.v;
+				tmp.array[pos++] = e.r;
+				tmp.array[pos++] = e.g;
+				tmp.array[pos++] = e.b;
+				tmp.array[pos++] = e.a;
+				tmp.array[pos++] = sx;
+				tmp.array[pos++] = sy + t.height + 0.1;
+				tmp.array[pos++] = t.u;
+				tmp.array[pos++] = t.v2;
+				tmp.array[pos++] = e.r;
+				tmp.array[pos++] = e.g;
+				tmp.array[pos++] = e.b;
+				tmp.array[pos++] = e.a;
+				tmp.array[pos++] = sx + t.width + 0.1;
+				tmp.array[pos++] = sy + t.height + 0.1;
+				tmp.array[pos++] = t.u2;
+				tmp.array[pos++] = t.v2;
+				tmp.array[pos++] = e.r;
+				tmp.array[pos++] = e.g;
+				tmp.array[pos++] = e.b;
+				tmp.array[pos++] = e.a;
+			}
+			e = e.next;
+		}
+		bufferVertices = pos >> 3;
+		var tmp;
+		if(this.buffer != null) {
+			var _this = this.buffer;
+			tmp = !(_this.buffer == null || _this.buffer.vbuf == null);
+		} else {
+			tmp = false;
+		}
+		if(tmp) {
+			if(this.buffer.vertices >= bufferVertices) {
+				this.buffer.uploadVector(this.tmpBuf,0,bufferVertices);
+				return;
+			}
+			this.buffer.dispose();
+			this.buffer = null;
+		}
+		this.empty = bufferVertices == 0;
+		if(bufferVertices > 0) {
+			this.buffer = h3d_Buffer.ofSubFloats(this.tmpBuf,8,bufferVertices,[h3d_BufferFlag.Dynamic,h3d_BufferFlag.Quads,h3d_BufferFlag.RawFormat]);
+		}
+	}
+	,draw: function(ctx) {
+		this.drawWith(ctx,this);
+	}
+	,drawWith: function(ctx,obj) {
+		var tmp;
+		if(!(this.first == null || this.buffer == null)) {
+			var _this = this.buffer;
+			tmp = _this.buffer == null || _this.buffer.vbuf == null;
+		} else {
+			tmp = true;
+		}
+		if(tmp || this.empty) {
+			return;
+		}
+		if(!ctx.beginDrawBatchState(obj)) {
+			return;
+		}
+		var engine = ctx.engine;
+		this.state.drawQuads(ctx,this.buffer);
+	}
+	,onRemove: function() {
+		h2d_Drawable.prototype.onRemove.call(this);
+		if(this.buffer != null) {
+			this.buffer.dispose();
+			this.buffer = null;
+		}
+		this.state.clear();
+	}
+	,__class__: h2d_SpriteBatch
+});
 var h2d_Align = $hxEnums["h2d.Align"] = { __ename__:"h2d.Align",__constructs__:null
 	,Left: {_hx_name:"Left",_hx_index:0,__enum__:"h2d.Align",toString:$estr}
 	,Right: {_hx_name:"Right",_hx_index:1,__enum__:"h2d.Align",toString:$estr}
@@ -7917,6 +9342,11 @@ h3d_Buffer.ofFloats = function(v,stride,flags) {
 	var nvert = v.pos / stride | 0;
 	var b = new h3d_Buffer(nvert,stride,flags);
 	b.uploadVector(v,0,nvert);
+	return b;
+};
+h3d_Buffer.ofSubFloats = function(v,stride,vertices,flags) {
+	var b = new h3d_Buffer(vertices,stride,flags);
+	b.uploadVector(v,0,vertices);
 	return b;
 };
 h3d_Buffer.prototype = {
@@ -24698,6 +26128,131 @@ hxd_Key.onEvent = function(e) {
 	default:
 	}
 };
+hxd_Key.getKeyName = function(keyCode) {
+	var c = keyCode;
+	switch(c) {
+	case 0:
+		return "MouseLeft";
+	case 1:
+		return "MouseRight";
+	case 2:
+		return "MouseMiddle";
+	case 3:
+		return "Mouse3";
+	case 4:
+		return "Mouse4";
+	case 8:
+		return "Backspace";
+	case 9:
+		return "Tab";
+	case 13:
+		return "Enter";
+	case 16:
+		return "Shift";
+	case 17:
+		return "Ctrl";
+	case 18:
+		return "Alt";
+	case 19:
+		return "PauseBreak";
+	case 20:
+		return "CapsLock";
+	case 27:
+		return "Escape";
+	case 32:
+		return "Space";
+	case 33:
+		return "PageUp";
+	case 34:
+		return "PageDown";
+	case 35:
+		return "End";
+	case 36:
+		return "Home";
+	case 37:
+		return "Left";
+	case 38:
+		return "Up";
+	case 39:
+		return "Right";
+	case 40:
+		return "Down";
+	case 45:
+		return "Insert";
+	case 46:
+		return "Delete";
+	case 91:
+		return "LeftWindowKey";
+	case 92:
+		return "RightWindowKey";
+	case 93:
+		return "ContextMenu";
+	case 106:
+		return "NumPad*";
+	case 107:
+		return "NumPad+";
+	case 108:
+		return "NumPadEnter";
+	case 109:
+		return "NumPad-";
+	case 110:
+		return "NumPad.";
+	case 111:
+		return "NumPad/";
+	case 144:
+		return "NumLock";
+	case 145:
+		return "ScrollLock";
+	case 186:
+		return "Semicolon";
+	case 187:
+		return "Equals";
+	case 188:
+		return "Comma";
+	case 189:
+		return "Minus";
+	case 190:
+		return "Period";
+	case 191:
+		return "Slash";
+	case 192:
+		return "Tilde";
+	case 219:
+		return "BracketLeft";
+	case 220:
+		return "Backslash";
+	case 221:
+		return "BacketRight";
+	case 222:
+		return "Quote";
+	case 226:
+		return "IntlBackslash";
+	case 272:
+		return "LShift";
+	case 273:
+		return "LCtrl";
+	case 274:
+		return "LAlt";
+	case 528:
+		return "RShift";
+	case 529:
+		return "RCtrl";
+	case 530:
+		return "RAlt";
+	default:
+		if(c >= 48 && c <= 57) {
+			return "" + (c - 48);
+		} else if(c >= 96 && c <= 105) {
+			return "NumPad" + (c - 96);
+		} else if(c >= 65 && c <= 90) {
+			return String.fromCodePoint((65 + c - 65));
+		} else if(c >= 112 && c <= 135) {
+			return "F" + (c - 112 + 1);
+		} else {
+			return null;
+		}
+	}
+};
 var hxd_Pad = function() {
 	this.rawRYAxis = 0.;
 	this.rawRXAxis = 0.;
@@ -39557,6 +41112,33 @@ js_html__$CanvasElement_CanvasUtil.getContextWebGL = function(canvas,attribs) {
 	return null;
 };
 Math.__name__ = "Math";
+var tool_XorShift = function(seed) {
+	if(seed == null) {
+		seed = -307194740;
+	}
+	this.z = 1993267937;
+	this.y = -712238974;
+	this.x = -175585370;
+	this.w = seed;
+};
+$hxClasses["tool.XorShift"] = tool_XorShift;
+tool_XorShift.__name__ = "tool.XorShift";
+tool_XorShift.prototype = {
+	gen: function() {
+		var t = this.x ^ this.x << 11;
+		this.x = this.y;
+		this.y = this.z;
+		this.z = this.w;
+		return this.w = this.w ^ this.w >> 19 ^ (t ^ t >> 8);
+	}
+	,copyTo: function(previewEmitter) {
+		previewEmitter.x = this.x;
+		previewEmitter.y = this.y;
+		previewEmitter.z = this.z;
+		previewEmitter.w = this.w;
+	}
+	,__class__: tool_XorShift
+};
 var typepacker_core_DataConcreter = function(setting) {
 	this.setting = setting;
 };
@@ -40502,7 +42084,7 @@ var Float = Number;
 var Bool = Boolean;
 var Class = { };
 var Enum = { };
-haxe_Resource.content = [{ name : "R_font_milimoji_0_png", data : "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"},{ name : "R_tiles_main_png", data : "iVBORw0KGgoAAAANSUhEUgAAAIAAAAAgCAYAAADaInAlAAACCElEQVR4Ae3gAZAkSZIkSRKLqpm7R0REZmZmVlVVVVV3d3d3d/fMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMdHd3d3dXV1VVVVVmZkZGRIS7m5kKz0xmV3d1d3dPz8zMzMxMYuWZ/FeY/wR6GQRw+sNs/hOc+wYJYOnBPJeFegEsPZgXYqFeAEsP5rks1Iv/u6hc9f8Z8l9h7vfIL+M/1JM+AYAz324AXv7h/If686dw2e1fPwKwUC/+Ay09mGdaqBf/9xDc75Ffxn+4R34Z93v5h/Mf7uUfzrMs1Iv/YAv14v82Klf9f0blqv/PqFz1/xmV/wMW6sV/koV68X8Xlav+PyP4P2DpwfwnWXrw0oP5v4nKVf+fUbnq/zMqV/1/RuWq/8+oXPX/GZWr/j+jctX/Z1T+D1ioF/9JFurF/11Urvr/jOD/gKUH859k6cFLD+b/JipX/X9G5ar/z6hc9f8Zwf2e9An8Z/rzp/Af7s+fwrMsPZj/YEsP5v82xDP5rzD/CfQyCOD0h9n8Jzj3DRLA0oN5Lgv1Alh6MC/EQr0Alh7Mc1moF/93Ubnq/zPEVf+fUbnq/zMqV/1/RuWq/8+oXPX/GZWr/j/jHwHz9lv/Nd/nYAAAAABJRU5ErkJggg"},{ name : "R_font_milimoji_fnt", data : "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/wgAAQAAAAAAhv8AADAAUAAHAAkA//8AAAYAAAAAAEr/AAAAAAAABQALAP//AAAEAAAAAADh/wAAeABaAAcACQD//wAABgAAAAAA1wAAAFAAgQAHAAcA//8BAAYAAAAAAIT/AAAgAFAABwAJAP//AAAGAAAAAACS/wAAEABaAAcACQD//wAABgAAAAAAQQAAAEAAFAAHAAkA//8AAAYAAAAAAAn/AABdAG4ABQAJAAAAAAAFAAAAAAAsAAAAOwChAAQABQAAAAQABAAAAAAAkP8AAAAAXAAHAAkA//8AAAYAAAAAAHgAAABAAIEABwAHAP//AgAGAAAAAAAUMAAAaQBuAAQACQABAAAABQAAAAAAogAAACgAPAAHAAkA//8AAAYAAAAAAEgAAAB4ABQABwAJAP//AAAGAAAAAAAhAAAAIAB4AAMACQABAAAABAAAAAAAQAAAADgAFAAHAAkA//8AAAYAAAAAADT/AAAoADIABwAJAP//AAAGAAAAAABdAAAACgB6AAQACQAAAAAABAAAAAAAdwAAADgAgQAHAAcA//8CAAYAAAAAAE3/AAAoAJIABwAHAP//AgAGAAAAAABa/wAAaACQAAcABwD//wIABgAAAAAAdf8AACAARgAHAAkA//8AAAYAAAAAAFwAAAAYACgABwAJAP//AAAGAAAAAAALMAAAXQBkAAYACQD//wAABQAAAAAAICAAAEsAbgAFAAkAAAAAAAUAAAAAACcAAAB8AJ0AAwAEAAEAAAAEAAAAAACT/wAAGABaAAcACQD//wAABgAAAAAAWAAAAHgAHgAHAAkA//8AAAYAAAAAAJv/AABYAFoABwAJAP//AAAGAAAAAABQ/wAASAA8AAcACQD//wIABgAAAAAADv8AAEoApAADAAMAAQAGAAQAAAAAAFb/AABYAJEABwAHAP//AgAGAAAAAAB+AAAAbACYAAcABQD//wIABgAAAAAAIiAAAEIApQADAAMAAQADAAQAAAAAACb/AAAQACgABwAJAP//AAAGAAAAAAA9/wAABQB6AAQACQAAAAAABAAAAAAAFzAAAFYAZAAGAAkAAAAAAAYAAAAAAHv/AAAIAGYABwAJAP//AAAGAAAAAABT/wAASACRAAcABwD//wIABgAAAAAAbAAAACwAeAADAAkAAQAAAAQAAAAAAGj/AAAIAJwABwAHAP//AgAGAAAAAAAy/wAAGAAyAAcACQD//wAABgAAAAAAAjAAABgAogAFAAUA//8EAAQAAAAAAAX/AAAYAGQABwAJAP//AAAGAAAAAABu/wAAcACIAAcABwD//wIABgAAAAAAMQAAAEUAbgAFAAkAAAAAAAUAAAAAADQAAABYAAoABwAJAP//AAAGAAAAAAAZIAAAcgCeAAQABAAAAAAABAAAAAAAcv8AAAgASAAHAAkA//8AAAYAAAAAAIH/AAAIAFIABwAJAP//AAAGAAAAAAAYIwAAAACMAAcABwD//wEABgAAAAAAGzAAAAAAcAAGAAkA//8AAAUAAAAAAD4AAAAoABQABwAJAP//AAAGAAAAAABqAAAABgAAAAUACwD//wAABAAAAAAAbwAAABAAhAAHAAcA//8CAAYAAAAAABUwAAB4AG4ABAAJAAEAAAAFAAAAAACH/wAAOABQAAcACQD//wAABgAAAAAAPP8AAHAAMgAHAAkA//8AAAYAAAAAAD7/AABEAJkABwAFAP//AAAGAAAAAABSAAAASAAeAAcACQD//wAABgAAAAAADP8AADYAoQAEAAUAAAAEAAQAAAAAAFkAAAAAACoABwAJAP//AAAGAAAAAAA4AAAAeAAKAAcACQD//wAABgAAAAAATwAAADAAHgAHAAkA//8AAAYAAAAAABwgAABPAJ8ABgAEAAAAAAAGAAAAAABH/wAAGAA8AAcACQD//wIABgAAAAAACTAAAAAAegAEAAkAAAAAAAQAAAAAABL/AAA4AGQABwAJAP//AAAGAAAAAABn/wAAAACcAAcABwD//wIABgAAAAAAaf8AABAAnAAHAAcA//8CAAYAAAAAAF3/AAB6AAAABQAJAAAAAAAFAAAAAABlAAAAAACEAAcABwD//wIABgAAAAAARQAAAGAAFAAHAAkA//8AAAYAAAAAACL/AAAIABYABwAJAP//AAAGAAAAAACM/wAAYABQAAcACQD//wAABgAAAAAAYAAAAGgAngAEAAQAAAAAAAQAAAAAAAMwAABUAJkABwAFAP//AQAGAAAAAAA//wAAEACqAAcAAwD//wYABgAAAAAAX/8AAGgAPAAHAAkA//8AAAYAAAAAAC0AAAAoAKgABwADAP//AwAGAAAAAAAMMAAAGACaAAUABwABAAAABgAAAAAATgAAACgAHgAHAAkA//8AAAYAAAAAAHYAAAAwAIIABwAHAP//AgAGAAAAAABRAAAAQAAeAAcACQD//wAABgAAAAAAJiAAABgAqAAHAAMA//8GAAYAAAAAAJIhAABwAIAABwAHAP//AQAGAAAAAAAf/wAAIAAKAAcACQD//wAABgAAAAAADjAAAAcAcAAGAAkAAAAAAAYAAAAAAEv/AABAADwABwAJAP//AAAGAAAAAAAs/wAAOAAoAAcACQD//wAABgAAAAAAlf8AACgAWgAHAAkA//8AAAYAAAAAAOD/AABwAFoABwAJAP//AAAGAAAAAABGAAAAaAAUAAcACQD//wAABgAAAAAAFf8AAEIAAAAHAAkA//8AAAYAAAAAAED/AABtAJ4ABAAEAAAAAAAEAAAAAABeAAAAZACYAAcABQD//wAABgAAAAAAbQAAAAgAhAAHAAcA//8CAAYAAAAAAA8wAABPAGQABgAJAP//AAAFAAAAAABMAAAAGAAeAAcACQD//wAABgAAAAAAOQAAAAAAFgAHAAkA//8AAAYAAAAAACv/AAAwACgABwAJAP//AAAGAAAAAAB0/wAAGABGAAcACQD//wAABgAAAAAAYgAAAEgAKAAHAAkA//8AAAYAAAAAAJEhAABoAIAABwAHAP//AQAGAAAAAAD5IwAAcACQAAcABwD//wEABgAAAAAAHDAAAEwAmQAHAAUA//8CAAYAAAAAAEz/AAAYAHgAAwAJAAEAAAAEAAAAAABt/wAAaACIAAcABwD//wIABgAAAAAAMwAAAFAACgAHAAkA//8AAAYAAAAAAGsAAAAIADQABwAJAP//AAAGAAAAAABx/wAAAABIAAcACQD//wAABgAAAAAAE/8AAEAAZAAHAAkA//8AAAYAAAAAAB7/AAAYAAoABwAJAP//AAAGAAAAAABP/wAAOACRAAcABwD//wIABgAAAAAAb/8AAHgAiAAHAAcA//8CAAYAAAAAAC//AABgACgABwAJAP//AAAGAAAAAAAjJAAAQACgAAcABAD//wUABgAAAAAAWgAAAAgAKgAHAAkA//8AAAYAAAAAAJAhAABgAIAABwAHAP//AQAGAAAAAAAL/wAACACUAAcABwD//wEABgAAAAAAKAAAABsAbgAFAAkAAAAAAAUAAAAAAEMAAABQABQABwAJAP//AAAGAAAAAAA3AAAAcAAKAAcACQD//wAABgAAAAAAbgAAABgAkgAHAAcA//8CAAYAAAAAAEb/AAAQADwABwAJAP//AAAGAAAAAAA7AAAAWQB4AAQACAAAAAEABAAAAAAApQAAADgAPAAHAAkA//8AAAYAAAAAABn/AAAIAAwABwAJAP//AAAGAAAAAABs/wAAYACIAAcABwD//wIABgAAAAAAI/8AABAAFAAHAAkA//8AAAYAAAAAAHQAAAA0AHgABwAIAP//AQAGAAAAAAAo/wAAKAAoAAcACQD//wAABgAAAAAAl/8AADgAWgAHAAkA//8AAAYAAAAAALYlAAAoAIoABwAHAP//AQAGAAAAAAAmAAAAYgAAAAcACQD//wAABgAAAAAAPQAAAAgApAAHAAUA//8CAAYAAAAAAEL/AAAAAD4ABwAJAP//AAAGAAAAAAB5/wAAQABGAAcACQD//wAABgAAAAAAcQAAADgAMgAHAAkA//8CAAYAAAAAABf/AAByAAAABwAJAP//AAAGAAAAAAAh/wAAQAAKAAcACQD//wAABgAAAAAAcP8AAAAAqgAHAAMA//8DAAYAAAAAAI3/AABoAFAABwAJAP//AAAGAAAAAABU/wAAWAA8AAcACQD//wAABgAAAAAAZf8AAE4ApAADAAMAAQADAAQAAAAAADoAAAB8AHgAAwAHAAEAAQAEAAAAAABKAAAACAAgAAcACQD//wAABgAAAAAAcAAAADAAMgAHAAkA//8CAAYAAAAAALIlAAAgAIoABwAHAP//AQAGAAAAAABLAAAAEAAeAAcACQD//wAABgAAAAAAewAAAD8AbgAFAAkAAAAAAAUAAAAAADAAAAA4AAoABwAJAP//AAAGAAAAAABHAAAAMgAAAAcACQD//wAABgAAAAAANv8AAEgAMgAHAAkA//8AAAYAAAAAAEX/AAAgAJIABwAHAP//AgAGAAAAAAAN/wAAIACoAAcAAwD//wMABgAAAAAANQAAAGAACgAHAAkA//8AAAYAAAAAABMwAABQAIkABwAHAP//AQAGAAAAAAB9/wAAYABGAAcACQD//wAABgAAAAAASP8AACAAPAAHAAkA//8AAAYAAAAAAC8AAAAwAAoABwAJAP//AAAGAAAAAABJAAAAVwBuAAUACQAAAAAABQAAAAAAAf8AACgAeAADAAkAAQAAAAQAAAAAABj/AAAAAAwABwAJAP//AAAGAAAAAABbAAAADwB6AAQACQABAAAABQAAAAAAYQAAAGwAeAAHAAcA//8CAAYAAAAAAPUjAAAOAHAABgAJAAAAAAAGAAAAAACjAAAAMAA8AAcACQD//wAABgAAAAAAYwAAAHQAeAAHAAcA//8CAAYAAAAAAHIAAAAYAIIABwAHAP//AgAGAAAAAAAlAAAAWgAAAAcACQD//wAABgAAAAAAAv8AAFwAnwAFAAQAAAAAAAUAAAAAACkAAAAhAG4ABQAJAAAAAAAFAAAAAACD/wAAGABQAAcACQD//wAABgAAAAAAXwAAAAgAqgAHAAMA//8GAAYAAAAAAI7/AABwAFAABwAJAP//AAAGAAAAAABzAAAAIACCAAcABwD//wIABgAAAAAAEP8AADAAZAAHAAkA//8AAAYAAAAAACoAAAA8AJkABwAGAP//AAAGAAAAAAAK/wAANACaAAcABgD//wAABgAAAAAAnf8AAGgAWgAHAAkA//8AAAYAAAAAAB4wAAA2AKcABQADAP7/CAABAAAAAABB/wAAAACUAAcABwD//wIABgAAAAAAiv8AAFAAUAAHAAkA//8AAAYAAAAAAC4AAABGAKUAAwADAAEABgAEAAAAAACxAAAAPAB4AAcACAD//wAABgAAAAAAlv8AADAAWgAHAAkA//8AAAYAAAAAAEIAAABIABQABwAJAP//AAAGAAAAAABTAAAAUAAeAAcACQD//wAABgAAAAAADTAAACoAmgAFAAcA//8CAAQAAAAAAFX/AABQAJEABwAHAP//AgAGAAAAAAAjAAAASgAAAAcACQD//wAABgAAAAAAvCUAADAAigAHAAcA//8BAAYAAAAAAA//AAAoAGQABwAJAP//AAAGAAAAAABm/wAAeAA8AAcACQD//wAABgAAAAAAKwAAAHgAkAAHAAcA//8BAAYAAAAAAFYAAABoAB4ABwAJAP//AAAGAAAAAAAt/wAAQAAoAAcACQD//wAABgAAAAAAAAAAAA"},{ name : "R_tiles_main_json", data : "W3siayI6InRpbGVzLnBuZyIsIngiOjEsInkiOjEsInciOjcyLCJoIjoyNCwic3giOjAsInN5IjowLCJzdyI6NzIsInNoIjoyNH1d"}];
+haxe_Resource.content = [{ name : "R_font_milimoji_0_png", data : "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"},{ name : "R_tiles_main_png", data : "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"},{ name : "R_font_milimoji_fnt", data : "QkZOVAABDQBtaWxpbW9qaV9nYW1lCgAOAG1pbGltb2ppXzAucG5nCgAIAD8AAAAHMAAAQACJAAcABwD//wEABgAAAAAAMgAAAEgACgAHAAkA//8AAAYAAAAAAFAAAAA4AB4ABwAJAP//AAAGAAAAAABoAAAAeAAoAAcACQD//wAABgAAAAAAkf8AAAgAXAAHAAkA//8AAAYAAAAAAID/AAAAAFIABwAJAP//AAAGAAAAAAAIJAAAKAAAAAkACQD//wAACAAAAAAAlP8AACAAWgAHAAkA//8AAAYAAAAAAMAlAAA4AIkABwAHAP//AQAGAAAAAABY/wAASACJAAcABwD//wIABgAAAAAAif8AAEgAUAAHAAkA//8AAAYAAAAAAGcAAABwACgABwAJAP//AgAGAAAAAAAYIAAAdwCeAAQABAABAAAABQAAAAAAdv8AACgARgAHAAkA//8AAAYAAAAAAGYAAABoACgABwAJAP//AAAGAAAAAAAhJAAAGgAAAA0ACQD//wAADAAAAAAAQ/8AABAAlAAHAAcA//8CAAYAAAAAAAkkAABeAHgADQAHAP//AgAMAAAAAAAE/wAAEABkAAcACQD//wAABgAAAAAAGTAAAHIAZAAGAAkAAAAAAAYAAAAAAAP/AABwAEYABwAJAP//AAAGAAAAAAAG/wAAIABkAAcACQD//wAABgAAAAAAFP8AADoAAAAHAAkA//8AAAYAAAAAADj/AABYADIABwAJAP//AAAGAAAAAABi/wAAHgCaAAUABwABAAAABgAAAAAAeQAAAHgAMgAHAAkA//8CAAYAAAAAAJn/AABIAFoABwAJAP//AAAGAAAAAACP/wAAeABQAAcACQD//wAABgAAAAAA+CMAABgAigAHAAcA//8BAAYAAAAAAB3/AAAAAKQABwAFAP//AgAGAAAAAACI/wAAQABQAAcACQD//wAABgAAAAAA5f8AAAAAZgAHAAkA//8AAAYAAAAAAAf/AAB8AJgAAwAEAAEAAAAEAAAAAAAl/wAAAAAgAAcACQD//wAABgAAAAAAN/8AAFAAMgAHAAkA//8AAAYAAAAAAH//AAB4AEYABwAJAP//AAAGAAAAAABb/wAAJwBuAAUACQAAAAAABQAAAAAAfP8AAFAARgAHAAkA//8AAAYAAAAAAIL/AAAQAFAABwAJAP//AAAGAAAAAAA2AAAAaAAKAAcACQD//wAABgAAAAAACjAAAGQAZAAGAAkAAAAAAAYAAAAAACT/AAAgABQABwAJAP//AAAGAAAAAAAz/wAAIAAyAAcACQD//wAABgAAAAAAmP8AAEAAWgAHAAkA//8AAAYAAAAAAHwAAAAkAHgAAwAJAAEAAAAEAAAAAABg/wAAcAA8AAcACQD//wAABgAAAAAAi/8AAFgAUAAHAAkA//8AAAYAAAAAAE0AAAAgAB4ABwAJAP//AAAGAAAAAABJ/wAAMAB4AAMACQABAAAABAAAAAAAZP8AACQAogAFAAUA//8EAAQAAAAAABowAAB5AGQABgAJAAAAAAAGAAAAAAAc/wAAEAAKAAcACQD//wAABgAAAAAAGyQAAAwAAAANAAkA//8AAAwAAAAAACQAAABSAAAABwAJAP//AAAGAAAAAABe/wAAdACYAAcABQD//wIABgAAAAAARAAAAFgAFAAHAAkA//8AAAYAAAAAAIX/AAAoAFAABwAJAP//AAAGAAAAAAB6AAAASACBAAcABwD//wIABgAAAAAAHSAAAEgAnwAGAAQA//8AAAUAAAAAADH/AAAQADIABwAJAP//AAAGAAAAAAB3/wAAMABGAAcACQD//wAABgAAAAAAVQAAAGAAHgAHAAkA//8AAAYAAAAAAAMjAAAQAKQABwAFAP//AQAGAAAAAAArIwAAEACMAAcABwD//wEABgAAAAAAY/8AACQAmgAFAAcA//8CAAQAAAAAAGQAAABYACgABwAJAP//AAAGAAAAAAA1/wAAQAAyAAcACQD//wAABgAAAAAAaQAAABwAeAADAAkAAQAAAAQAAAAAABYwAABIAGQABgAJAAAAAAAGAAAAAABR/wAAUAA8AAcACQD//wIABgAAAAAAnv8AAGIAnwAFAAQAAAAAAAUAAAAAAC7/AABQACgABwAJAP//AAAGAAAAAAD3AAAAWACBAAcABwD//wEABgAAAAAAGDAAAGsAZAAGAAkAAAAAAAYAAAAAACn/AAAzAG4ABQAJAAAAAAAFAAAAAAA/AAAAMAAUAAcACQD//wAABgAAAAAAYf8AAB4AogAFAAUA//8EAAQAAAAAAGr/AAAIAIwABwAHAP//AgAGAAAAAAAn/wAAIAAoAAcACQD//wAABgAAAAAAKv8AAHAAFAAHAAkA//8AAAYAAAAAAET/AAAIAD4ABwAJAP//AAAGAAAAAADOIwAAWABGAAcACQD//wAABgAAAAAAEjAAAEwAeAAHAAgA//8BAAYAAAAAAJMhAAB4AIAABwAHAP//AQAGAAAAAAABMAAAKgCiAAUABQD//wQABAAAAAAAfQAAAC0AbgAFAAkAAAAAAAUAAAAAAAj/AABRAG4ABQAJAAAAAAAFAAAAAAAg/wAAKAAKAAcACQD//wAABgAAAAAAfv8AAGgARgAHAAkA//8AAAYAAAAAACAAAAA8AKcABQADAP7/CAACAAAAAAA5/wAAYAAyAAcACQD//wAABgAAAAAAFv8AAGoAAAAHAAkA//8AAAYAAAAAAFf/AABgAJAABwAHAP//AgAGAAAAAACc/wAAYABaAAcACQD//wAABgAAAAAAdQAAACgAggAHAAcA//8CAAYAAAAAACUjAABcAJkABwAFAP//AgAGAAAAAAA8AAAAGAAUAAcACQD//wAABgAAAAAAAiMAAEQAeAAHAAgA//8AAAYAAAAAABAwAAAVAG4ABQAJAAAAAAAFAAAAAAB6/wAASABGAAcACQD//wAABgAAAAAAEf8AADkAbgAFAAkAAAAAAAUAAAAAABr/AAAwAJoAAwAHAAEAAQAEAAAAAAAb/wAAVAB4AAQACAAAAAEABAAAAAAAOv8AAGgAMgAHAAkA//8AAAYAAAAAAFn/AABgADwABwAJAP//AgAGAAAAAACa/wAAUABaAAcACQD//wAABgAAAAAAMP8AAAAANAAHAAkA//8AAAYAAAAAAGv/AABYAIkABwAHAP//AgAGAAAAAACf/wAAMACiAAUABQD//wAABAAAAAAAVwAAAHAAHgAHAAkA//8AAAYAAAAAAE7/AAAwAJIABwAHAP//AgAGAAAAAABS/wAAQACRAAcABwD//wIABgAAAAAAc/8AABAARgAHAAkA//8AAAYAAAAAADv/AABuAG4ABAAJAAEAAAAFAAAAAABUAAAAWAAeAAcACQD//wAABgAAAAAAXP8AABQAegADAAkAAQAAAAQAAAAAACIAAABWAJ8ABQAEAAAAAAAFAAAAAAAIMAAAcwBuAAQACQAAAAAABAAAAAAAETAAAGMAbgAFAAkAAAAAAAUAAAAAAHj/AAA4AEYABwAJAP//AAAGAAAAAAAdMAAAMACoAAUAAwD+/wgAAQAAAAAAhv8AADAAUAAHAAkA//8AAAYAAAAAAEr/AAAAAAAABQALAP//AAAEAAAAAADh/wAAeABaAAcACQD//wAABgAAAAAA1wAAAFAAgQAHAAcA//8BAAYAAAAAAIT/AAAgAFAABwAJAP//AAAGAAAAAACS/wAAEABaAAcACQD//wAABgAAAAAAQQAAAEAAFAAHAAkA//8AAAYAAAAAAAn/AABdAG4ABQAJAAAAAAAFAAAAAAAsAAAAOwChAAQABQAAAAQABAAAAAAAkP8AAAAAXAAHAAkA//8AAAYAAAAAAHgAAABAAIEABwAHAP//AgAGAAAAAAAUMAAAaQBuAAQACQABAAAABQAAAAAAogAAACgAPAAHAAkA//8AAAYAAAAAAEgAAAB4ABQABwAJAP//AAAGAAAAAAAhAAAAIAB4AAMACQABAAAABAAAAAAAQAAAADgAFAAHAAkA//8AAAYAAAAAADT/AAAoADIABwAJAP//AAAGAAAAAABdAAAACgB6AAQACQAAAAAABAAAAAAAdwAAADgAgQAHAAcA//8CAAYAAAAAAE3/AAAoAJIABwAHAP//AgAGAAAAAABa/wAAaACQAAcABwD//wIABgAAAAAAdf8AACAARgAHAAkA//8AAAYAAAAAAFwAAAAYACgABwAJAP//AAAGAAAAAAALMAAAXQBkAAYACQD//wAABQAAAAAAICAAAEsAbgAFAAkAAAAAAAUAAAAAACcAAAB8AJ0AAwAEAAEAAAAEAAAAAACT/wAAGABaAAcACQD//wAABgAAAAAAWAAAAHgAHgAHAAkA//8AAAYAAAAAAJv/AABYAFoABwAJAP//AAAGAAAAAABQ/wAASAA8AAcACQD//wIABgAAAAAADv8AAEoApAADAAMAAQAGAAQAAAAAAFb/AABYAJEABwAHAP//AgAGAAAAAAB+AAAAbACYAAcABQD//wIABgAAAAAAIiAAAEIApQADAAMAAQADAAQAAAAAACb/AAAQACgABwAJAP//AAAGAAAAAAA9/wAABQB6AAQACQAAAAAABAAAAAAAFzAAAFYAZAAGAAkAAAAAAAYAAAAAAHv/AAAIAGYABwAJAP//AAAGAAAAAABT/wAASACRAAcABwD//wIABgAAAAAAbAAAACwAeAADAAkAAQAAAAQAAAAAAGj/AAAIAJwABwAHAP//AgAGAAAAAAAy/wAAGAAyAAcACQD//wAABgAAAAAAAjAAABgAogAFAAUA//8EAAQAAAAAAAX/AAAYAGQABwAJAP//AAAGAAAAAABu/wAAcACIAAcABwD//wIABgAAAAAAMQAAAEUAbgAFAAkAAAAAAAUAAAAAADQAAABYAAoABwAJAP//AAAGAAAAAAAZIAAAcgCeAAQABAAAAAAABAAAAAAAcv8AAAgASAAHAAkA//8AAAYAAAAAAIH/AAAIAFIABwAJAP//AAAGAAAAAAAYIwAAAACMAAcABwD//wEABgAAAAAAGzAAAAAAcAAGAAkA//8AAAUAAAAAAD4AAAAoABQABwAJAP//AAAGAAAAAABqAAAABgAAAAUACwD//wAABAAAAAAAbwAAABAAhAAHAAcA//8CAAYAAAAAABUwAAB4AG4ABAAJAAEAAAAFAAAAAACH/wAAOABQAAcACQD//wAABgAAAAAAPP8AAHAAMgAHAAkA//8AAAYAAAAAAD7/AABEAJkABwAFAP//AAAGAAAAAABSAAAASAAeAAcACQD//wAABgAAAAAADP8AADYAoQAEAAUAAAAEAAQAAAAAAFkAAAAAACoABwAJAP//AAAGAAAAAAA4AAAAeAAKAAcACQD//wAABgAAAAAATwAAADAAHgAHAAkA//8AAAYAAAAAABwgAABPAJ8ABgAEAAAAAAAGAAAAAABH/wAAGAA8AAcACQD//wIABgAAAAAACTAAAAAAegAEAAkAAAAAAAQAAAAAABL/AAA4AGQABwAJAP//AAAGAAAAAABn/wAAAACcAAcABwD//wIABgAAAAAAaf8AABAAnAAHAAcA//8CAAYAAAAAAF3/AAB6AAAABQAJAAAAAAAFAAAAAABlAAAAAACEAAcABwD//wIABgAAAAAARQAAAGAAFAAHAAkA//8AAAYAAAAAACL/AAAIABYABwAJAP//AAAGAAAAAACM/wAAYABQAAcACQD//wAABgAAAAAAYAAAAGgAngAEAAQAAAAAAAQAAAAAAAMwAABUAJkABwAFAP//AQAGAAAAAAA//wAAEACqAAcAAwD//wYABgAAAAAAX/8AAGgAPAAHAAkA//8AAAYAAAAAAC0AAAAoAKgABwADAP//AwAGAAAAAAAMMAAAGACaAAUABwABAAAABgAAAAAATgAAACgAHgAHAAkA//8AAAYAAAAAAHYAAAAwAIIABwAHAP//AgAGAAAAAABRAAAAQAAeAAcACQD//wAABgAAAAAAJiAAABgAqAAHAAMA//8GAAYAAAAAAJIhAABwAIAABwAHAP//AQAGAAAAAAAf/wAAIAAKAAcACQD//wAABgAAAAAADjAAAAcAcAAGAAkAAAAAAAYAAAAAAEv/AABAADwABwAJAP//AAAGAAAAAAAs/wAAOAAoAAcACQD//wAABgAAAAAAlf8AACgAWgAHAAkA//8AAAYAAAAAAOD/AABwAFoABwAJAP//AAAGAAAAAABGAAAAaAAUAAcACQD//wAABgAAAAAAFf8AAEIAAAAHAAkA//8AAAYAAAAAAED/AABtAJ4ABAAEAAAAAAAEAAAAAABeAAAAZACYAAcABQD//wAABgAAAAAAbQAAAAgAhAAHAAcA//8CAAYAAAAAAA8wAABPAGQABgAJAP//AAAFAAAAAABMAAAAGAAeAAcACQD//wAABgAAAAAAOQAAAAAAFgAHAAkA//8AAAYAAAAAACv/AAAwACgABwAJAP//AAAGAAAAAAB0/wAAGABGAAcACQD//wAABgAAAAAAYgAAAEgAKAAHAAkA//8AAAYAAAAAAJEhAABoAIAABwAHAP//AQAGAAAAAAD5IwAAcACQAAcABwD//wEABgAAAAAAHDAAAEwAmQAHAAUA//8CAAYAAAAAAEz/AAAYAHgAAwAJAAEAAAAEAAAAAABt/wAAaACIAAcABwD//wIABgAAAAAAMwAAAFAACgAHAAkA//8AAAYAAAAAAGsAAAAIADQABwAJAP//AAAGAAAAAABx/wAAAABIAAcACQD//wAABgAAAAAAE/8AAEAAZAAHAAkA//8AAAYAAAAAAB7/AAAYAAoABwAJAP//AAAGAAAAAABP/wAAOACRAAcABwD//wIABgAAAAAAb/8AAHgAiAAHAAcA//8CAAYAAAAAAC//AABgACgABwAJAP//AAAGAAAAAAAjJAAAQACgAAcABAD//wUABgAAAAAAWgAAAAgAKgAHAAkA//8AAAYAAAAAAJAhAABgAIAABwAHAP//AQAGAAAAAAAL/wAACACUAAcABwD//wEABgAAAAAAKAAAABsAbgAFAAkAAAAAAAUAAAAAAEMAAABQABQABwAJAP//AAAGAAAAAAA3AAAAcAAKAAcACQD//wAABgAAAAAAbgAAABgAkgAHAAcA//8CAAYAAAAAAEb/AAAQADwABwAJAP//AAAGAAAAAAA7AAAAWQB4AAQACAAAAAEABAAAAAAApQAAADgAPAAHAAkA//8AAAYAAAAAABn/AAAIAAwABwAJAP//AAAGAAAAAABs/wAAYACIAAcABwD//wIABgAAAAAAI/8AABAAFAAHAAkA//8AAAYAAAAAAHQAAAA0AHgABwAIAP//AQAGAAAAAAAo/wAAKAAoAAcACQD//wAABgAAAAAAl/8AADgAWgAHAAkA//8AAAYAAAAAALYlAAAoAIoABwAHAP//AQAGAAAAAAAmAAAAYgAAAAcACQD//wAABgAAAAAAPQAAAAgApAAHAAUA//8CAAYAAAAAAEL/AAAAAD4ABwAJAP//AAAGAAAAAAB5/wAAQABGAAcACQD//wAABgAAAAAAcQAAADgAMgAHAAkA//8CAAYAAAAAABf/AAByAAAABwAJAP//AAAGAAAAAAAh/wAAQAAKAAcACQD//wAABgAAAAAAcP8AAAAAqgAHAAMA//8DAAYAAAAAAI3/AABoAFAABwAJAP//AAAGAAAAAABU/wAAWAA8AAcACQD//wAABgAAAAAAZf8AAE4ApAADAAMAAQADAAQAAAAAADoAAAB8AHgAAwAHAAEAAQAEAAAAAABKAAAACAAgAAcACQD//wAABgAAAAAAcAAAADAAMgAHAAkA//8CAAYAAAAAALIlAAAgAIoABwAHAP//AQAGAAAAAABLAAAAEAAeAAcACQD//wAABgAAAAAAewAAAD8AbgAFAAkAAAAAAAUAAAAAADAAAAA4AAoABwAJAP//AAAGAAAAAABHAAAAMgAAAAcACQD//wAABgAAAAAANv8AAEgAMgAHAAkA//8AAAYAAAAAAEX/AAAgAJIABwAHAP//AgAGAAAAAAAN/wAAIACoAAcAAwD//wMABgAAAAAANQAAAGAACgAHAAkA//8AAAYAAAAAABMwAABQAIkABwAHAP//AQAGAAAAAAB9/wAAYABGAAcACQD//wAABgAAAAAASP8AACAAPAAHAAkA//8AAAYAAAAAAC8AAAAwAAoABwAJAP//AAAGAAAAAABJAAAAVwBuAAUACQAAAAAABQAAAAAAAf8AACgAeAADAAkAAQAAAAQAAAAAABj/AAAAAAwABwAJAP//AAAGAAAAAABbAAAADwB6AAQACQABAAAABQAAAAAAYQAAAGwAeAAHAAcA//8CAAYAAAAAAPUjAAAOAHAABgAJAAAAAAAGAAAAAACjAAAAMAA8AAcACQD//wAABgAAAAAAYwAAAHQAeAAHAAcA//8CAAYAAAAAAHIAAAAYAIIABwAHAP//AgAGAAAAAAAlAAAAWgAAAAcACQD//wAABgAAAAAAAv8AAFwAnwAFAAQAAAAAAAUAAAAAACkAAAAhAG4ABQAJAAAAAAAFAAAAAACD/wAAGABQAAcACQD//wAABgAAAAAAXwAAAAgAqgAHAAMA//8GAAYAAAAAAI7/AABwAFAABwAJAP//AAAGAAAAAABzAAAAIACCAAcABwD//wIABgAAAAAAEP8AADAAZAAHAAkA//8AAAYAAAAAACoAAAA8AJkABwAGAP//AAAGAAAAAAAK/wAANACaAAcABgD//wAABgAAAAAAnf8AAGgAWgAHAAkA//8AAAYAAAAAAB4wAAA2AKcABQADAP7/CAABAAAAAABB/wAAAACUAAcABwD//wIABgAAAAAAiv8AAFAAUAAHAAkA//8AAAYAAAAAAC4AAABGAKUAAwADAAEABgAEAAAAAACxAAAAPAB4AAcACAD//wAABgAAAAAAlv8AADAAWgAHAAkA//8AAAYAAAAAAEIAAABIABQABwAJAP//AAAGAAAAAABTAAAAUAAeAAcACQD//wAABgAAAAAADTAAACoAmgAFAAcA//8CAAQAAAAAAFX/AABQAJEABwAHAP//AgAGAAAAAAAjAAAASgAAAAcACQD//wAABgAAAAAAvCUAADAAigAHAAcA//8BAAYAAAAAAA//AAAoAGQABwAJAP//AAAGAAAAAABm/wAAeAA8AAcACQD//wAABgAAAAAAKwAAAHgAkAAHAAcA//8BAAYAAAAAAFYAAABoAB4ABwAJAP//AAAGAAAAAAAt/wAAQAAoAAcACQD//wAABgAAAAAAAAAAAA"},{ name : "R_tiles_main_json", data : "W3siayI6ImZyYW1lLnBuZyIsIngiOjEsInkiOjEsInciOjE2LCJoIjoxNiwic3giOjAsInN5IjowLCJzdyI6MTYsInNoIjoxNn0seyJrIjoia2V5LnBuZyIsIngiOjIxLCJ5IjoxLCJ3IjozMCwiaCI6MTYsInN4IjowLCJzeSI6MCwic3ciOjMwLCJzaCI6MTZ9LHsiayI6ImtleV93aWRlLnBuZyIsIngiOjU1LCJ5IjoxLCJ3Ijo0MiwiaCI6MTYsInN4IjowLCJzeSI6MCwic3ciOjQyLCJzaCI6MTZ9LHsiayI6InBhZC5wbmciLCJ4IjoxMDEsInkiOjEsInciOjI4LCJoIjoxNSwic3giOjEsInN5IjowLCJzdyI6MzAsInNoIjoxNn0seyJrIjoicGFkX3dpZGUucG5nIiwieCI6MTMzLCJ5IjoxLCJ3IjozNCwiaCI6MTQsInN4IjowLCJzeSI6MSwic3ciOjM0LCJzaCI6MTZ9LHsiayI6InRpbGVzLnBuZyIsIngiOjE3MSwieSI6MSwidyI6NzIsImgiOjI0LCJzeCI6MCwic3kiOjAsInN3Ijo3Miwic2giOjI0fV0"}];
 haxe_MainLoop.add(hxd_System.updateCursor,-1);
 var hx__registerFont;
 hx__registerFont = function(name,data) {
